@@ -2,7 +2,9 @@ import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import { uri } from "./secrets.js";
-console.log(uri);
+//uri is defined at the deployer in a secret file
+
+// console.log(uri);
 // import { MongoClient, ServerApiVersion } from "mongodb";
 
 const app = express();
@@ -87,6 +89,17 @@ app.post("/submit", (req, res) => {
   if (state === "work") {
     saveTheNoteWork(req.body.newItem);
 
+    res.redirect("/work");
+  }
+});
+
+app.post("/delete", async (req, res) => {
+  if (state === "today") {
+    await NotesToday.collection.drop();
+    res.redirect("/today");
+  }
+  if (state === "work") {
+    await NotesWork.collection.drop();
     res.redirect("/work");
   }
 });
